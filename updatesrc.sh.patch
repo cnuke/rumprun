@@ -1,5 +1,5 @@
 diff --git a/updatesrc.sh b/updatesrc.sh
-index b977c1d..4a4e83d 100644
+index b977c1d..97844ff 100644
 --- a/updatesrc.sh
 +++ b/updatesrc.sh
 @@ -54,7 +54,7 @@ lsfiles () {
@@ -11,3 +11,12 @@ index b977c1d..4a4e83d 100644
  	files sbin/		newfs_v7fs newfs_msdos newfs_ext2fs
  	files sbin/		newfs_lfs newfs_sysvbfs newfs_udf
  	files sbin/		ping ping6 raidctl reboot
+@@ -146,7 +146,7 @@ githubdate ()
+ 
+ 	echo '>> final step: commit updatedsrc.sh'
+ 	cp ../updatesrc.sh .
+-	${GIT} commit updatesrc.sh
++	${GIT} commit -m "commit new updatesrc.sh" updatesrc.sh
+ 
+ 	echo '>> Done.  Remember to push ./newsrc after testing'
+ 	echo '>> Use "git diff HEAD^^" to review changes'
