@@ -1,0 +1,19 @@
+--- buildnb.sh.orig	2014-04-24 11:03:48.844115442 +0200
++++ buildnb.sh	2014-04-24 11:29:30.896188442 +0200
+@@ -37,7 +37,7 @@
+ 
+ # Build rump kernel
+ ./buildrump.sh/buildrump.sh ${BUILD_QUIET} ${STDJ} $* \
+-    -s rumpsrc -T rumptools -o rumpdynobj -d rumpdyn -V MKSTATICLIB=no fullbuild
++    -s rumpsrc -T rumptools -o rumpdynobj -d /usr/local/genode-rump -V MKSTATICLIB=no tools build
+ 
+ # Now build a static libc.
+ 
+@@ -97,5 +97,5 @@
+ 	makeuserlib ${lib}
+ done
+ 
+-./buildrump.sh/buildrump.sh ${BUILD_QUIET} $* \
+-    -s rumpsrc -T rumptools -o rumpobj install
++#./buildrump.sh/buildrump.sh ${BUILD_QUIET} $* \
++#    -s rumpsrc -T rumptools -o rumpobj install

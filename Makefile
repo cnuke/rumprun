@@ -33,6 +33,7 @@ NBUTILS+=		sbin/ifconfig
 NBUTILS+=		sbin/mknod
 NBUTILS+=		sbin/modstat
 NBUTILS+=		sbin/mount
+NBUTILS+=		sbin/mount_ext2fs
 NBUTILS+=		sbin/mount_ffs
 NBUTILS+=		sbin/newfs
 NBUTILS+=		sbin/newfs_ext2fs

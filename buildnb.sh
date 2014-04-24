@@ -37,7 +37,8 @@ fi
 
 # Build rump kernel
 ./buildrump.sh/buildrump.sh ${BUILD_QUIET} ${STDJ} $* \
-    -s rumpsrc -T rumptools -o rumpdynobj -d rumpdyn -V MKSTATICLIB=no fullbuild
+    -s rumpsrc -T rumptools -o rumpdynobj -d rumpdyn \
+    -R /usr/local/genode-rump -V MKSTATICLIB=no fullbuild
 
 # Now build a static libc.
 

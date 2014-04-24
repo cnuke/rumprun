@@ -1,0 +1,43 @@
+diff --git a/buildrump.sh b/buildrump.sh
+index 46fe4c4..3364be1 100755
+--- a/buildrump.sh
++++ b/buildrump.sh
+@@ -58,6 +58,7 @@ helpme ()
+ 	printf "\t-o: location for build-time files.  default: PWD/obj\n"
+ 	printf "\t-T: location for tools+rumpmake.  default: PWD/obj/tooldir\n"
+ 	printf "\t-s: location of source tree.  default: PWD/src\n"
++	printf "\t-R: location used as run path. default: PWD/rump (or location -d)\n"
+ 	echo
+ 	printf "\t-j: value of -j specified to make.  default: ${JNUM}\n"
+ 	printf "\t-q: quiet build, less compiler output.  default: noisy\n"
+@@ -513,7 +514,7 @@ LIBCRTEND=
+ LIBCRTI=
+ LIBC=
+ 
+-LDFLAGS+= -L\${BUILDRUMP_STAGE}/usr/lib -Wl,-R${DESTDIR}/lib
++LDFLAGS+= -L\${BUILDRUMP_STAGE}/usr/lib -Wl,-R${RUN_PATH}/lib
+ LDADD+= ${EXTRA_RUMPCOMMON} ${EXTRA_RUMPUSER} ${EXTRA_RUMPCLIENT}
+ EOF
+ 		[ ${LD_FLAVOR} != 'sun' ] \
+@@ -761,9 +762,10 @@ parseargs ()
+ 	OBJDIR=./obj
+ 	DESTDIR=./rump
+ 	SRCDIR=./src
++	RUN_PATH=${DESTDIR}
+ 	JNUM=4
+ 
+-	while getopts '3:6:d:DhHj:kNo:qrs:T:V:' opt; do
++	while getopts '3:6:d:DhHj:kNo:qrs:R:T:V:' opt; do
+ 		case "$opt" in
+ 		3)
+ 			[ ${OPTARG} != '2' ] \
+@@ -817,6 +819,9 @@ parseargs ()
+ 			RUMP_DIAGNOSTIC=no
+ 			DBG=''
+ 			;;
++		R)
++			RUN_PATH=${OPTARG}
++			;;
+ 		s)
+ 			SRCDIR=${OPTARG}
+ 			;;

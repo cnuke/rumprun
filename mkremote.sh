@@ -18,7 +18,8 @@ UNAME=`uname -s`
 # -lrt not always needed
 [ ${UNAME} = Linux ] && DLFLAG="-ldl -lrt"
 
-RUMPCLIENT="-Lrumpdyn/lib -Wl,-R${PWD}/rumpdyn/lib -lrumpclient"
+RUN_PATH="/usr/local/genode-rump"
+RUMPCLIENT="-Lrumpdyn/lib -Wl,-R${RUN_PATH}/lib -lrumpclient"
 
 CC=${CC-cc}
 
