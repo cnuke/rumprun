@@ -1,0 +1,91 @@
+--- rump_allserver.c.orig	2014-05-06 14:46:51.380485355 +0200
++++ rump_allserver.c	2014-05-06 16:01:32.040637684 +0200
+@@ -34,6 +34,7 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ 
++#include <dirent.h>
+ #include <dlfcn.h>
+ #include <errno.h>
+ #include <fcntl.h>
+@@ -132,6 +133,8 @@
+ 	{ "blk", RUMP_ETFS_BLK },
+ 	{ "chr", RUMP_ETFS_CHR },
+ 	{ "reg", RUMP_ETFS_REG },
++	{ "dir", RUMP_ETFS_DIR },
++	{ "dirs", RUMP_ETFS_DIR_SUBDIRS },
+ };
+ 
+ static void processlabel(int, int, int, off_t *, off_t *);
+@@ -439,34 +442,47 @@
+ 		struct stat sb;
+ 		off_t foffset, flen, fendoff;
+ 		int fd, oflags;
++		DIR *dp;
+ 
+-		oflags = etfs[i].flen == DSIZE_E ? 0 : O_CREAT;
+-		fd = open(etfs[i].hostpath, O_RDWR | oflags, 0644);
+-		if (fd == -1)
+-			die(sflag, errno, "etfs hostpath open");
+-
+-		if (etfs[i].partition) {
+-			processlabel(sflag, fd, etfs[i].partition - 'a',
+-			    &foffset, &flen);
+-		} else {
+-			foffset = etfs[i].foffset;
+-			flen = etfs[i].flen;
++		if (etfs[i].type == RUMP_ETFS_DIR_SUBDIRS
++		    || etfs[i].type == RUMP_ETFS_DIR_SUBDIRS) {
++			dp = opendir(etfs[i].hostpath);
++			if (dp == NULL)
++				die(sflag, errno, "etfs hostpath opendir");
++
++			closedir(dp);
++			foffset = 0;
++			flen = RUMP_ETFS_SIZE_ENDOFF;
+ 		}
++		else {
++			oflags = etfs[i].flen == DSIZE_E ? 0 : O_CREAT;
++			fd = open(etfs[i].hostpath, O_RDWR | oflags, 0644);
++			if (fd == -1)
++				die(sflag, errno, "etfs hostpath open");
++
++			if (etfs[i].partition) {
++				processlabel(sflag, fd, etfs[i].partition - 'a',
++							 &foffset, &flen);
++			} else {
++				foffset = etfs[i].foffset;
++				flen = etfs[i].flen;
++			}
+ 
+-		if (fstat(fd, &sb) == -1)
+-			die(sflag, errno, "fstat etfs hostpath");
+-		if (flen == DSIZE_E) {
+-			if (sb.st_size == 0)
+-				die(sflag, EINVAL, "size=host, but cannot "
+-				    "query non-zero size");
+-			flen = sb.st_size;
+-		}
+-		fendoff = foffset + flen;
+-		if (S_ISREG(sb.st_mode) && sb.st_size < fendoff) {
+-			if (ftruncate(fd, fendoff) == -1)
+-				die(sflag, errno, "truncate");
++			if (fstat(fd, &sb) == -1)
++				die(sflag, errno, "fstat etfs hostpath");
++			if (flen == DSIZE_E) {
++				if (sb.st_size == 0)
++					die(sflag, EINVAL, "size=host, but cannot "
++						"query non-zero size");
++				flen = sb.st_size;
++			}
++			fendoff = foffset + flen;
++			if (S_ISREG(sb.st_mode) && sb.st_size < fendoff) {
++				if (ftruncate(fd, fendoff) == -1)
++					die(sflag, errno, "truncate");
++			}
++			close(fd);
+ 		}
+-		close(fd);
+ 
+ 		if ((error = rump_pub_etfs_register_withsize(etfs[i].key,
+ 		    etfs[i].hostpath, etfs[i].type, foffset, flen)) != 0)
