@@ -1,8 +1,15 @@
 diff --git a/updatesrc.sh b/updatesrc.sh
-index b977c1d..97844ff 100644
+index b977c1d..2352a3a 100644
 --- a/updatesrc.sh
 +++ b/updatesrc.sh
-@@ -54,7 +54,7 @@ lsfiles () {
+@@ -48,13 +48,13 @@ lsfiles () {
+ 	files lib/lib		pthread rmt util y z
+ 	files libexec/		ld.elf_so
+ 
+-	files bin/		cat cp dd df ln ls mkdir mv pax rm rmdir
++	files bin/		cat cp dd df ln ls mkdir mv pax rm rmdir sh
+ 
+ 	files sbin/		cgdconfig
  	files sbin/		disklabel dump fsck fsck_ext2fs fsck_ffs
  	files sbin/		fsck_lfs fsck_msdos fsck_v7fs
  	files sbin/		ifconfig mknod
@@ -11,6 +18,15 @@ index b977c1d..97844ff 100644
  	files sbin/		newfs_v7fs newfs_msdos newfs_ext2fs
  	files sbin/		newfs_lfs newfs_sysvbfs newfs_udf
  	files sbin/		ping ping6 raidctl reboot
+@@ -77,7 +77,7 @@ lsfiles () {
+ SRCDIR=./newsrc
+ export CVSROOT=anoncvs@anoncvs.netbsd.org:/cvsroot
+ CVSFLAGS="-z3"
+-GITREPOPUSH='git@github.com:rumpkernel/netbsd-userspace-src'
++GITREPOPUSH='https://github.com/rumpkernel/netbsd-userspace-src.git'
+ 
+ checkoutcvs ()
+ {
 @@ -146,7 +146,7 @@ githubdate ()
  
  	echo '>> final step: commit updatedsrc.sh'
