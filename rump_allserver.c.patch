@@ -42,7 +42,7 @@
 +
 +			closedir(dp);
 +			foffset = 0;
-+			flen = RUMP_ETFS_SIZE_ENDOFF;
++			flen = (off_t)RUMP_ETFS_SIZE_ENDOFF;
  		}
 +		else {
 +			oflags = etfs[i].flen == DSIZE_E ? 0 : O_CREAT;
